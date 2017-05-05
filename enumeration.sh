@@ -58,12 +58,12 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 | awk '{print "Host: " $1 " TCP Ports: " NF-1; $1=""; for(i=2; i<=NF; i++) { a=a" "$i; }; split(a,s,","); for(e in s) { split(s[e],v,"/"); printf "%-8s %s/%-7s %s\n" , v[2], v[3], v[1], v[5]}; a="" }' >> ${TARGETNOTES}
 
 
-txt2html ${TARGETNOTES}  > index.html
+txt2html ${TARGETNOTES}  > ${TARGETDIR}/index.html
 
 
 #egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d ' ' -f4- | tr ',' '\n' | \
 #sed -e 's/^[ \t]*//' | awk -F '/' '{print $7}' | grep -v "^$" | sort | uniq -c \
-#| sort -k 1 -nr >> ${TARGETNOTES}
+#| sort -k 1 -nr > ${TARGETNOTES}
 
 
 sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,vuln,intrusive" ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
@@ -122,6 +122,6 @@ txt2html ${TARGETDIR}/${TARGET}-exploit-list > ${TARGETDIR}/${TARGET}-exploit-li
 for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 6)
   if [ ! $create == "index.html" ];
     then
-      echo "<a href=\"${create}\">${create}</a> >> index.html
+      echo "<a href=\"${create}\">${create}</a> >> ${TARGETDIR}/index.html
   fi
 done
