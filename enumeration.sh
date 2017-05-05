@@ -8,7 +8,7 @@ set -eo pipefail
 ulimit -n 4090
 
 ############## Variables #############
-WORKINGDIR=~/hacking/
+WORKINGDIR=~/hacking
 TARGET="$@"
 NMAPP="/usr/bin/nmap"
 ENUM4LINUX="/usr/bin/enum4linux"
@@ -60,7 +60,7 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 
 
 echo "<center><h1>${TARGET}</h1></center>" > ${TARGETDIR}/index.html
-txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html
+txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
 
 
 #egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d ' ' -f4- | tr ',' '\n' | \
