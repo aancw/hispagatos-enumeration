@@ -13,6 +13,8 @@ CTF is ok to make noise, on a pentest is not..
 TOOLS YOU NEED INSTALLED
 I recomend Blackarch GNU/Linux
 
+- txt2html - pacaur -S txt2html (from AUR in arch GNU/linux/blackarch GNU/Linux)
+- Xalan-c - pacaur -S community/xalan-c 
 - nmap
 - nitko
 - exploit-db - searchsploit(exploit-db)
