@@ -72,7 +72,7 @@ fi
 
 
 if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
-  $NMAPP -Pn -p80,443,8080 --script="http-*" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
+  $NMAPP -Pn -p80,443,8080 --script="http-* and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
   $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO
   dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt >> ${TARGETDIR}/${TARGET}-Dirb
   fimap -u http://${TARGET}/
