@@ -121,9 +121,20 @@ fi
 txt2html ${TARGETDIR}/${TARGET}-exploit-list > ${TARGETDIR}/${TARGET}-exploit-list.html
 
 
-for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 6)
+
+echo "<table border="1">"                         >> ${TARGETDIR}/index.html
+echo "<caption><em>RAW RESULTS FROM SCANS \
+      AND ENUMERATION</em></caption>"             >> ${TARGETDIR}/index.html
+
+for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 7);
+  do
   if [ ! $create == "index.html" ];
     then
-      echo "<a href=\"${create}\">${create}</a> >> ${TARGETDIR}/index.html
+      echo "<tr>"                                 >> ${TARGETDIR}/index.html
+      echo "<td>"                                 >> ${TARGETDIR}/index.html
+      echo "<a href=\"${create}\">${create}</a>"  >> ${TARGETDIR}/index.html
+      echo "</td>"                                >> ${TARGETDIR}/index.html
+      echo "</tr>"                                >> ${TARGETDIR}/index.html
   fi
 done
+echo "</table>"                                   >> ${TARGETDIR}/index.html
