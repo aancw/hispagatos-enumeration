@@ -23,3 +23,9 @@ I recomend Blackarch GNU/Linux
 - egrp
 - your brain - do not be a script kiddie and run this tool as a must, use it only for speed
 not because you can't do this simple task by yourself.. 
+
+
+
+
+Fernandez Chris AKA ReK2
+https://keybase.io/cfernandez

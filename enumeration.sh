@@ -2,6 +2,7 @@
 # ReK2 Fernandez Chris
 # hispagatos hacking collective
 # https://hispagatos.org 
+# https://keybase.io/cfernandez
 
 set -eo pipefail
 ulimit -n 4090
