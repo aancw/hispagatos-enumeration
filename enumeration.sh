@@ -58,7 +58,8 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 | awk '{print "Host: " $1 " TCP Ports: " NF-1; $1=""; for(i=2; i<=NF; i++) { a=a" "$i; }; split(a,s,","); for(e in s) { split(s[e],v,"/"); printf "%-8s %s/%-7s %s\n" , v[2], v[3], v[1], v[5]}; a="" }' >> ${TARGETNOTES}
 
 
-txt2html ${TARGETNOTES}  > ${TARGETDIR}/index.html
+echo "<center><h1>${TARGET}</h1></center>" > ${TARGETDIR}/index.html
+txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html
 
 
 #egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d ' ' -f4- | tr ',' '\n' | \
