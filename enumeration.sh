@@ -51,6 +51,7 @@ $NMAPP -Pn -p- -vv $TARGET -oA ${TARGETDIR}/${TARGET}-BASIC-Pn-allports
 
 
 cat ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.nmap | sed '/open/!d' | cut -d "/" -f 1 > /tmp/${TARGET}-raw-ports
+
 TCPOPEN=$(paste -d, -s /tmp/${TARGET}-raw-ports)
 
 egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d' ' -f2-  | sed -n -e 's/Ignored.*//p' \
@@ -65,20 +66,31 @@ sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,vuln,intrusive" ${TARGET
 
 
 if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
+
   $ENUM4LINUX -a ${TARGET} >  ${TARGETDIR}/${TARGET}-ENUM4LINUX 
+
   $NMAPP -Pn -p445,135,139 --script="smb-*" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
 fi
 
 
 
 if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
+
   $NMAPP -Pn -p80,443,8080 --script="http-* and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
+
   $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO
+
   dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt >> ${TARGETDIR}/${TARGET}-Dirb
-  fimap -u http://${TARGET}/
+
+  fimap -u http://${TARGET}/ >> -oA ${TARGETDIR}/${TARGET}-fimap
   
   echo "OPEN ZAPROXY and do enumeration of the WEBAPP's"
 fi
 
+if [[ $TCPOPEN == *"161"* ]] || [[ $TCPOPEN == *"162"* ]]; then
+
+ $NMAPP -Pn -p161,162 --script="snmp-*" -oA ${TARGETDIR}/${TARGET}-all-SNMP
+
+fi
 
 /usr/bin/searchsploit --nmap ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.xml > ${TARGETDIR}/${TARGET}-exploit-list
