@@ -95,7 +95,7 @@ if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"808
 
   sudo $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.xml || true
 
-  txt2html ${TARGETDIR}/${TARGET}-NIKTO > ${TARGETDIR}/${TARGET}-NIKTO.html
+  Xalan -a  ${TARGETDIR}/${TARGET}-NIKTO.xml > ${TARGETDIR}/${TARGET}-NIKTO.html
 
   dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt > ${TARGETDIR}/${TARGET}-Dirb || true
 
