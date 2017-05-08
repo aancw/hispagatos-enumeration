@@ -68,18 +68,18 @@ txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
 #| sort -k 1 -nr > ${TARGETNOTES}
 
 
-sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,vuln,intrusive" ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
+sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,vuln and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
 
 Xalan -a ${TARGETDIR}/${TARGET}-VULN.xml > ${TARGETDIR}/${TARGET}-VULN.html
 
 
 if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
 
-  $ENUM4LINUX -a ${TARGET} >  ${TARGETDIR}/${TARGET}-ENUM4LINUX 
+  $ENUM4LINUX -a ${TARGET} >  ${TARGETDIR}/${TARGET}-ENUM4LINUX || true
 
   txt2html ${TARGETDIR}/${TARGET}-ENUM4LINUX > ${TARGETDIR}/${TARGET}-ENUM4LINUX.html
 
-  $NMAPP -Pn -p445,135,139 --script="smb-*" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
+  $NMAPP -Pn -p445,135,139 --script="smb-* and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
   
   Xalan -a ${TARGETDIR}/${TARGET}-all-SMB.xml  > ${TARGETDIR}/${TARGET}-all-SMB.html
 
@@ -89,19 +89,19 @@ fi
 
 if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
 
-  $NMAPP -Pn -p80,443,8080 --script="http-* and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
+  $NMAPP -Pn -p80,443,8080 --script="http-vuln*,http-enum,http-useragent-tester,http-userdir-enum,http-sql-injection,http-robots.txt,http-rfi-spider,http-php-version,http-phpmyadmin-dir-traversal,http-passwd" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
 
   Xalan -a ${TARGETDIR}/${TARGET}-all-HTTP.xml > ${TARGETDIR}/${TARGET}-all-HTTP.html
 
-  $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO
+  sudo $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.xml || true
 
   txt2html ${TARGETDIR}/${TARGET}-NIKTO > ${TARGETDIR}/${TARGET}-NIKTO.html
 
-  dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt > ${TARGETDIR}/${TARGET}-Dirb
+  dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt > ${TARGETDIR}/${TARGET}-Dirb || true
 
   txt2html ${TARGETDIR}/${TARGET}-Dirb > ${TARGETDIR}/${TARGET}-Dirb.html 
 
-  fimap -u http://${TARGET}/ > ${TARGETDIR}/${TARGET}-fimap
+  fimap -u http://${TARGET}/ > ${TARGETDIR}/${TARGET}-fimap || true
 
   txt2html ${TARGETDIR}/${TARGET}-fimap > ${TARGETDIR}/${TARGET}-fimap.html
   
@@ -126,7 +126,7 @@ echo "<table border="1">"                         >> ${TARGETDIR}/index.html
 echo "<caption><em>RAW RESULTS FROM SCANS \
       AND ENUMERATION</em></caption>"             >> ${TARGETDIR}/index.html
 
-for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 7);
+for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 6);
   do
   if [ ! $create == "index.html" ];
     then
