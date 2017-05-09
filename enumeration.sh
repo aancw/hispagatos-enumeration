@@ -68,7 +68,9 @@ txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
 #| sort -k 1 -nr > ${TARGETNOTES}
 
 
-sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,vuln and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
+sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,
+                                                vuln and not auth" \ 
+                                                ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
 
 Xalan -a ${TARGETDIR}/${TARGET}-VULN.xml > ${TARGETDIR}/${TARGET}-VULN.html
 
@@ -79,7 +81,28 @@ if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
 
   txt2html ${TARGETDIR}/${TARGET}-ENUM4LINUX > ${TARGETDIR}/${TARGET}-ENUM4LINUX.html
 
-  $NMAPP -Pn -p445,135,139 --script="smb-* and not auth" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
+  $NMAPP -Pn -p445,135,139 --script="smb-enum-domains,
+                                     smb-enum-groups,
+                                     smb-enum-processes,
+                                     smb-enum-sessions,
+                                     smb-enum-shares,
+                                     smb-enum-users,
+                                     smb-flood,
+                                     smb-ls,
+                                     smb-os-discovery,
+                                     smb-print-text,
+                                     smb-security-mode,
+                                     smb-server-stats,
+                                     smb-system-info,
+                                     smb-vuln-conficker,
+                                     smb-vuln-cve2009-3103,
+                                     smb-vuln-ms06-025,
+                                     smb-vuln-ms07-029,
+                                     smb-vuln-ms08-067,
+                                     smb-vuln-ms10-054,
+                                     smb-vuln-ms10-061,
+                                     smb-vuln-regsvc-dos and not smb-brute" \
+                                     ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
   
   Xalan -a ${TARGETDIR}/${TARGET}-all-SMB.xml  > ${TARGETDIR}/${TARGET}-all-SMB.html
 
@@ -89,7 +112,16 @@ fi
 
 if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
 
-  $NMAPP -Pn -p80,443,8080 --script="http-vuln*,http-enum,http-useragent-tester,http-userdir-enum,http-sql-injection,http-robots.txt,http-rfi-spider,http-php-version,http-phpmyadmin-dir-traversal,http-passwd" ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
+  $NMAPP -Pn -p80,443,8080 --script="http-vuln*,
+                                     http-enum,
+                                     http-useragent-tester,
+                                     http-userdir-enum,
+                                     http-sql-injection,
+                                     http-robots.txt,
+                                     http-rfi-spider,
+                                     http-php-version,
+                                     http-phpmyadmin-dir-traversal,http-passwd" \ 
+                                     ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
 
   Xalan -a ${TARGETDIR}/${TARGET}-all-HTTP.xml > ${TARGETDIR}/${TARGET}-all-HTTP.html
 
