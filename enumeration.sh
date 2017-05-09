@@ -48,7 +48,8 @@ echo ""                                       >> ${TARGETNOTES}
 echo ""                                       >> ${TARGETNOTES}
 
 
-$NMAPP -Pn -p- -vv $TARGET -oA ${TARGETDIR}/${TARGET}-BASIC-Pn-allports
+echo "Starting BASIC scan..."
+$NMAPP -Pn -p- -vv ${TARGET} -oA ${TARGETDIR}/${TARGET}-BASIC-Pn-allports
 
 
 cat ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.nmap | sed '/open/!d' | cut -d "/" -f 1 > /tmp/${TARGET}-raw-ports
@@ -68,8 +69,9 @@ txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
 #| sort -k 1 -nr > ${TARGETNOTES}
 
 
+echo "Starting generic Vulnerability scan..."
 sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,
-                                                vuln and not auth" \ 
+                                                vuln and not auth" \
                                                 ${TARGET} -oA ${TARGETDIR}/${TARGET}-VULN
 
 Xalan -a ${TARGETDIR}/${TARGET}-VULN.xml > ${TARGETDIR}/${TARGET}-VULN.html
@@ -77,20 +79,20 @@ Xalan -a ${TARGETDIR}/${TARGET}-VULN.xml > ${TARGETDIR}/${TARGET}-VULN.html
 
 if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
 
+  echo "Starting enumeration of SMB enum4linux..."
   $ENUM4LINUX -a ${TARGET} >  ${TARGETDIR}/${TARGET}-ENUM4LINUX || true
 
   txt2html ${TARGETDIR}/${TARGET}-ENUM4LINUX > ${TARGETDIR}/${TARGET}-ENUM4LINUX.html
 
+  echo "Starting nmap smb scripts scan..."
   $NMAPP -Pn -p445,135,139 --script="smb-enum-domains,
                                      smb-enum-groups,
                                      smb-enum-processes,
                                      smb-enum-sessions,
                                      smb-enum-shares,
                                      smb-enum-users,
-                                     smb-flood,
                                      smb-ls,
                                      smb-os-discovery,
-                                     smb-print-text,
                                      smb-security-mode,
                                      smb-server-stats,
                                      smb-system-info,
@@ -100,8 +102,7 @@ if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
                                      smb-vuln-ms07-029,
                                      smb-vuln-ms08-067,
                                      smb-vuln-ms10-054,
-                                     smb-vuln-ms10-061,
-                                     smb-vuln-regsvc-dos and not smb-brute" \
+                                     smb-vuln-ms10-061" \
                                      ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-SMB
   
   Xalan -a ${TARGETDIR}/${TARGET}-all-SMB.xml  > ${TARGETDIR}/${TARGET}-all-SMB.html
@@ -111,7 +112,7 @@ fi
 
 
 if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
-
+  echo "Starting HTTP script vulns scan..."
   $NMAPP -Pn -p80,443,8080 --script="http-vuln*,
                                      http-enum,
                                      http-useragent-tester,
@@ -141,7 +142,7 @@ if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"808
 fi
 
 if [[ $TCPOPEN == *"161"* ]] || [[ $TCPOPEN == *"162"* ]]; then
-
+ echo "Starting SNMP scripts scan..."
  $NMAPP -Pn -p161,162 --script="snmp-*" -oA ${TARGETDIR}/${TARGET}-all-SNMP
 
  Xalan -a ${TARGETDIR}/${TARGET}-all-SNMP.xml > ${TARGETDIR}/${TARGET}-all-SNMP.html
