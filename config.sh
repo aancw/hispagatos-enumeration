@@ -11,4 +11,5 @@ ENUM4LINUX="/usr/bin/enum4linux"
 NIKTO="/usr/bin/nikto"
 TARGETDIR="${WORKINGDIR}/${TARGET}"
 TARGETNOTES="${TARGETDIR}/${TARGET}-NOTES"
+DELETE="true"
 #####################################

@@ -28,6 +28,12 @@ if [ ! -f ${TARGETNOTES} ];
     touch ${TARGETNOTES} 
 fi
 
+if [ $DELETE == "true" ];
+ then
+   rm ${TARGETDIR}/*.nmap ${TARGETDIR}/*.gnmap ${TARGETDIR}/*.html ${TARGETDIR}/*.xml
+fi
+
+
 echo "############# Starting ###############" >> ${TARGETNOTES}
 echo "working directory: ${WORKINGDIR}"       >> ${TARGETNOTES}
 echo "Target: ${TARGET}"                      >> ${TARGETNOTES}
