@@ -11,17 +11,26 @@ if [ -f ${WORKINGDIR}/index.html ]; then
   rm ${WORKINGDIR}/index.html
 fi
 
-echo "<table border="1">"                                                     >> ${WORKINGDIR}/index.html
-echo "<caption><em><h1>SUMMARY REPORT OF ALL HOSTS PENTESTED</h1></em></caption>"      >> ${WORKINGDIR}/index.html
 
-for host in $(ls ${WORKINGDIR} ); do
-  if [ ! $host == "index.html" ]; then
-    echo "<tr>"                                                               >> ${WORKINGDIR}/index.html
-    echo "<td>"                                                               >> ${WORKINGDIR}/index.html
-    echo "<center><a href="${host}/index.html"><h2>${host}</h2></a></center>" >> ${WORKINGDIR}/index.html
-    txt2html  --preformat_trigger_lines=0 ${WORKINGDIR}/$host/STEPS           >> ${WORKINGDIR}/index.html || true
-    echo "<center><a href="${host}/index.html"><b>click here for data for ${host}</b></a></center>" >> ${WORKINGDIR}/index.html
-    echo "</td>"                                                              >> ${WORKINGDIR}/index.html
-    echo "</tr>"                                                              >> ${WORKINGDIR}/index.html
+echo "<table border="1">"                                                              >> ${WORKINGDIR}/index.html
+echo "<caption><em><h1>SUMMARY REPORT OF ALL HOSTS PENTESTED</h1></em></caption>"      >> ${WORKINGDIR}/index.html
+for HOST in $(ls ${WORKINGDIR} ); do
+  if [ ! $HOST == "index.html" ]; then
+    if [ -f ${WORKINGDIR}/${HOST}/main.html ]; then
+      rm ${WORKINGDIR}/${HOST}/main.html
+    fi
+    cp ${WORKINGDIR}/${HOST}/index.html ${WORKINGDIR}/${HOST}/main.html
+    for FILES in $(ls ${WORKINGDIR}/${HOST}/files ); do
+      echo "<a href="{WORKINGDIR}/${HOST}/files/${FILES}">${FILES}</a>"                >> ${WORKINGDIR}/${HOST}/main.html 
+    done
+
+
+    echo "<tr>"                                                                        >> ${WORKINGDIR}/index.html
+    echo "<td>"                                                                        >> ${WORKINGDIR}/index.html
+    echo "<center><a href="${HOST}/main.html"><h2>${HOST}</h2></a></center>"          >> ${WORKINGDIR}/index.html
+    txt2html  --preformat_trigger_lines=0 ${WORKINGDIR}/${HOST}/STEPS                    >> ${WORKINGDIR}/index.html || true
+    echo "<center><a href="${HOST}/main.html"><b>click here for data for ${HOST}</b></a></center>" >> ${WORKINGDIR}/index.html
+    echo "</td>"                                                                       >> ${WORKINGDIR}/index.html
+    echo "</tr>"                                                                       >> ${WORKINGDIR}/index.html
   fi
 done
