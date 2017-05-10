@@ -30,7 +30,7 @@ fi
 
 if [ $DELETE == "true" ];
  then
-   rm ${TARGETDIR}/*.nmap ${TARGETDIR}/*.gnmap ${TARGETDIR}/*.html ${TARGETDIR}/*.xml
+   sudo rm ${TARGETDIR}/*.nmap ${TARGETDIR}/*.gnmap ${TARGETDIR}/*.html ${TARGETDIR}/*.xml
 fi
 
 
