@@ -30,7 +30,9 @@ fi
 
 if [ $DELETE == "true" ];
  then
-   sudo rm ${TARGETDIR}/*.nmap ${TARGETDIR}/*.gnmap ${TARGETDIR}/*.html ${TARGETDIR}/*.xml
+   sudo rm ${TARGETDIR}/*.nmap ${TARGETDIR}/*.gnmap ${TARGETDIR}/*-NOTES ${TARGETDIR}/*.html || true
+   sudo rm ${TARGETDIR}/*.xml ${TARGETDIR}/*-ENUM4LINUX ${TARGETDIR}/*-exploit-list || true
+   sudo rm ${TARGETDIR}/*-Dirb ${TARGETDIR}/*-fimap ${TARGETDIR}/*-NIKTO || true
 fi
 
 
