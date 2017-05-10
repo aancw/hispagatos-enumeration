@@ -121,14 +121,12 @@ if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"808
                                      http-robots.txt,
                                      http-rfi-spider,
                                      http-php-version,
-                                     http-phpmyadmin-dir-traversal,http-passwd" \ 
+                                     http-phpmyadmin-dir-traversal,http-passwd" \
                                      ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
 
   Xalan -a ${TARGETDIR}/${TARGET}-all-HTTP.xml > ${TARGETDIR}/${TARGET}-all-HTTP.html
 
-  sudo $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.xml || true
-
-  Xalan -a  ${TARGETDIR}/${TARGET}-NIKTO.xml > ${TARGETDIR}/${TARGET}-NIKTO.html
+  sudo $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.html || true
 
   dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt > ${TARGETDIR}/${TARGET}-Dirb || true
 
