@@ -21,7 +21,7 @@ for HOST in $(ls ${WORKINGDIR} ); do
     fi
     cp ${WORKINGDIR}/${HOST}/index.html ${WORKINGDIR}/${HOST}/main.html
     for FILES in $(ls ${WORKINGDIR}/${HOST}/files ); do
-      echo "<a href="{WORKINGDIR}/${HOST}/files/${FILES}">${FILES}</a>"                >> ${WORKINGDIR}/${HOST}/main.html 
+      echo "<a href="${WORKINGDIR}/${HOST}/files/${FILES}">${FILES}</a>"                >> ${WORKINGDIR}/${HOST}/main.html 
     done
 
 
@@ -34,3 +34,4 @@ for HOST in $(ls ${WORKINGDIR} ); do
     echo "</tr>"                                                                       >> ${WORKINGDIR}/index.html
   fi
 done
+echo "</table>"                                                                        >> ${WORKINGDIR}/index.html
