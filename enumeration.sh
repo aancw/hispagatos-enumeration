@@ -109,31 +109,43 @@ fi
 
 
 
-if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] ; then
+IFS=",";
+declare -a HTTPPORTS;
+TCPOPENArray=($TCPOPEN);
+for PORT in ${TCPOPENArray[@]}; do
+  if [[ $PORT == *"80"* ]] || [[ $PORT == *"443"* ]] || [[ $PORT == *"8080"* ]] || [[ $TCPOPEN == *"10000"* ]];
+    then
+      HTTPPORTS=("$HTTPPORTS" "$PORT")
+    fi
+  done
+unset IFS 
+
+if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"8080"* ]] || [[ $TCPOPEN == *"10000"* ]]; then
   echo "Starting HTTP script vulns scan..."
-  $NMAPP -Pn -p80,443,8080 --script="http-vuln*,
-                                     http-enum,
-                                     http-useragent-tester,
-                                     http-userdir-enum,
-                                     http-sql-injection,
-                                     http-robots.txt,
-                                     http-rfi-spider,
-                                     http-php-version,
-                                     http-phpmyadmin-dir-traversal,http-passwd" \
-                                     ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
+  $NMAPP -Pn -p80,443,8080,10000 --script="http-vuln*,
+                                           http-enum,
+                                           http-useragent-tester,
+                                           http-userdir-enum,
+                                           http-sql-injection,
+                                           http-robots.txt,
+                                           http-rfi-spider,
+                                           http-php-version,
+                                           http-phpmyadmin-dir-traversal,http-passwd" \
+                                           ${TARGET} -oA ${TARGETDIR}/${TARGET}-all-HTTP
 
   Xalan -a ${TARGETDIR}/${TARGET}-all-HTTP.xml > ${TARGETDIR}/${TARGET}-all-HTTP.html
 
-  sudo $NIKTO -port ${TCPOPEN} -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.html || true
+  sudo $NIKTO -port 80,443,8080,10000 -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.html || true
 
-  dirb http://${TARGET} /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt > ${TARGETDIR}/${TARGET}-Dirb || true
+  for WEBPORT in ${HTTPPORTS[@]}; do
+    dirb http://${TARGET}:$WEBPORT /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt -o  ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT} || true
+    txt2html ${TARGETDIR}/${TARGET}-Dirb-$WEBPORT > ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT}.html
+  done
 
-  txt2html ${TARGETDIR}/${TARGET}-Dirb > ${TARGETDIR}/${TARGET}-Dirb.html 
-
-  fimap -u http://${TARGET}/ > ${TARGETDIR}/${TARGET}-fimap || true
-
-  txt2html ${TARGETDIR}/${TARGET}-fimap > ${TARGETDIR}/${TARGET}-fimap.html
-  
+  for WEBPORT in ${HTTPPORTS[@]}; do
+    fimap -u http://${TARGET}:$WEBPORT/ > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT || true
+    txt2html ${TARGETDIR}/${TARGET}-fimap-$WEBPORT > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT.html
+  done
   echo "OPEN ZAPROXY and do enumeration of the WEBAPP's"
 fi
 
