@@ -58,14 +58,10 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 | awk '{print "Host: " $1 " TCP Ports: " NF-1; $1=""; for(i=2; i<=NF; i++) { a=a" "$i; }; split(a,s,","); for(e in s) { split(s[e],v,"/"); printf "%-8s %s/%-7s %s\n" , v[2], v[3], v[1], v[5]}; a="" }' >> ${TARGETNOTES}
 
 
-echo "<center><h1>${TARGET}</h1></center>" > ${TARGETDIR}/index.html
+echo "<center><h1>${TARGET}</h1></center>"  > ${TARGETDIR}/index.html
+echo "<center>"                             > ${TARGETDIR}/index.html
 txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
-
-
-#egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d ' ' -f4- | tr ',' '\n' | \
-#sed -e 's/^[ \t]*//' | awk -F '/' '{print $7}' | grep -v "^$" | sort | uniq -c \
-#| sort -k 1 -nr > ${TARGETNOTES}
-
+echo "</center>"                            > ${TARGETDIR}/index.html
 
 echo "Starting generic Vulnerability scan..."
 sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,
@@ -163,7 +159,7 @@ txt2html ${TARGETDIR}/${TARGET}-exploit-list > ${TARGETDIR}/${TARGET}-exploit-li
 
 
 
-echo "<table border="1">"                         >> ${TARGETDIR}/index.html
+echo "<table border="1" align="center">"          >> ${TARGETDIR}/index.html
 echo "<caption><em>RAW RESULTS FROM SCANS \
       AND ENUMERATION</em></caption>"             >> ${TARGETDIR}/index.html
 
@@ -180,4 +176,4 @@ for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 6);
 done
 echo "</table>"                                   >> ${TARGETDIR}/index.html
 
-sed -i 's/telnet:/http:/g' ${TARGETDIR}/index.html
+sed -i "s/telnet:/http:/g" ${TARGETDIR}/index.html
