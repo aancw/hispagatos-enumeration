@@ -58,10 +58,10 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 | awk '{print "Host: " $1 " TCP Ports: " NF-1; $1=""; for(i=2; i<=NF; i++) { a=a" "$i; }; split(a,s,","); for(e in s) { split(s[e],v,"/"); printf "%-8s %s/%-7s %s\n" , v[2], v[3], v[1], v[5]}; a="" }' >> ${TARGETNOTES}
 
 
-echo "<center><h1>${TARGET}</h1></center>"  > ${TARGETDIR}/index.html
-echo "<center>"                             > ${TARGETDIR}/index.html
+echo "<center><h1>${TARGET}</h1></center>"  >> ${TARGETDIR}/index.html
+echo "<center>"                             >> ${TARGETDIR}/index.html
 txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
-echo "</center>"                            > ${TARGETDIR}/index.html
+echo "</center>"                            >> ${TARGETDIR}/index.html
 
 echo "Starting generic Vulnerability scan..."
 sudo $NMAPP -Pn -sV -O -pT:${TCPOPEN} --script="default,
