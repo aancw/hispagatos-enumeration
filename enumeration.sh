@@ -48,7 +48,7 @@ echo ""                                       >> ${TARGETNOTES}
 
 echo "Starting BASIC scan..."
 $NMAPP -Pn -p- -vv ${TARGET} -oA ${TARGETDIR}/${TARGET}-BASIC-Pn-allports
-
+Xalan -a ${TARGETDIR}/${TARGET}-BASIC-Pn-allports  > ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.html
 
 cat ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.nmap | sed '/open/!d' | cut -d "/" -f 1 > /tmp/${TARGET}-raw-ports
 
