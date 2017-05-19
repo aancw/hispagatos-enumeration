@@ -48,7 +48,7 @@ echo ""                                       >> ${TARGETNOTES}
 
 echo "Starting BASIC scan..."
 $NMAPP -Pn -p- -vv ${TARGET} -oA ${TARGETDIR}/${TARGET}-BASIC-Pn-allports
-Xalan -a ${TARGETDIR}/${TARGET}-BASIC-Pn-allports  > ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.html
+Xalan -a ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.xml  > ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.html
 
 cat ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.nmap | sed '/open/!d' | cut -d "/" -f 1 > /tmp/${TARGET}-raw-ports
 
@@ -133,15 +133,21 @@ if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"808
 
   sudo $NIKTO -port 80,443,8080,10000 -host ${TARGET} -output ${TARGETDIR}/${TARGET}-NIKTO.html || true
 
-  for WEBPORT in ${HTTPPORTS[@]}; do
-    dirb http://${TARGET}:$WEBPORT /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt -o  ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT} || true
-    txt2html ${TARGETDIR}/${TARGET}-Dirb-$WEBPORT > ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT}.html
-  done
+  if [ ! $DISABLE_DIRBUSTER == "true" ]; then
+
+    for WEBPORT in ${HTTPPORTS[@]}; do
+      dirb http://${TARGET}:$WEBPORT /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt -o \
+        ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT} || true
+      txt2html ${TARGETDIR}/${TARGET}-Dirb-$WEBPORT > ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT}.html
+    done
+
+  fi
 
   for WEBPORT in ${HTTPPORTS[@]}; do
     fimap -u http://${TARGET}:$WEBPORT/ > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT || true
     txt2html ${TARGETDIR}/${TARGET}-fimap-$WEBPORT > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT.html
   done
+  
   echo "OPEN ZAPROXY and do enumeration of the WEBAPP's"
 fi
 

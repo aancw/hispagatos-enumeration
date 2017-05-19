@@ -12,4 +12,5 @@ NIKTO="/usr/bin/nikto"
 TARGETDIR="${WORKINGDIR}/${TARGET}"
 TARGETNOTES="${TARGETDIR}/${TARGET}-NOTES"
 DELETE="true"
+DISABLE_DIRBUSTER="true"
 #####################################
