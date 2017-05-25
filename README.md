@@ -20,7 +20,7 @@ I recomend Blackarch GNU/Linux
 - exploit-db - searchsploit(exploit-db)
 - fimap
 - Dirb
-- egrp
+- egrep
 - your brain - do not be a script kiddie and run this tool as a must, use it only for speed
 not because you can't do this simple task by yourself.. 
 
