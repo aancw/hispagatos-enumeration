@@ -24,6 +24,29 @@ I recomend Blackarch GNU/Linux
 - your brain - do not be a script kiddie and run this tool as a must, use it only for speed
 not because you can't do this simple task by yourself.. 
 
+to run, modify the config.sh
+
+```
+vim config.sh
+```
+
+Then to each remote host run the enumeration.sh script.. you can do this in screen for more than one host or diff terminals. so yes it can run in paralell.
+```
+./enumeration.sh xx.xx.xx.xx
+```
+
+on **each** created host folder like XX.XX.XX.XX are the files created, create one called STEPS
+and add your custom **notes* of what you did and what you found on that hosts.
+
+```
+vim XX.XX.XX.XX/STEPS
+```
+
+After all remote hosts you need are scanned then run the documentation.sh script
+```
+./documentation.sh
+```
+
 
 
 
