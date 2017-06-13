@@ -182,4 +182,5 @@ for create in $(ls ${TARGETDIR}/*.html | cut -d "/" -f 6);
 done
 echo "</table>"                                   >> ${TARGETDIR}/index.html
 
+sed -i "s/telnet:/http:/g" ${TARGETNOTES}
 sed -i "s/telnet:/http:/g" ${TARGETDIR}/index.html
