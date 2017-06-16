@@ -34,7 +34,9 @@ for HOST in $(ls ${WORKINGDIR} ); do
     echo "<tr>"                                                                        >> ${WORKINGDIR}/index.html
     echo "<td>"                                                                        >> ${WORKINGDIR}/index.html
     echo "<center><a href="${HOST}/main.html"><h2>${HOST}</h2></a></center>"          >> ${WORKINGDIR}/index.html
-    txt2html  --preformat_trigger_lines=0 ${WORKINGDIR}/${HOST}/STEPS                    >> ${WORKINGDIR}/index.html || true
+    if [ -f ${WORKINGDIR}/${HOST}/STEPS ]; then
+      txt2html  --preformat_trigger_lines=0 ${WORKINGDIR}/${HOST}/STEPS                    >> ${WORKINGDIR}/index.html || true
+    fi
     echo "<center><a href="${HOST}/main.html"><b>click here for data for ${HOST}</b></a></center>" >> ${WORKINGDIR}/index.html
     echo "</td>"                                                                       >> ${WORKINGDIR}/index.html
     echo "</tr>"                                                                       >> ${WORKINGDIR}/index.html
