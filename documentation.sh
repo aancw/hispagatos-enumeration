@@ -19,17 +19,20 @@ for HOST in $(ls ${WORKINGDIR} ); do
     if [ -f ${WORKINGDIR}/${HOST}/main.html ]; then
       rm ${WORKINGDIR}/${HOST}/main.html
     fi
-    cp ${WORKINGDIR}/${HOST}/index.html ${WORKINGDIR}/${HOST}/main.html
+    if [ -f ${WORKINGDIR}/${HOST}/index.html ]; then
+      cp ${WORKINGDIR}/${HOST}/index.html ${WORKINGDIR}/${HOST}/main.html
+    fi
     echo "<table border="1" align="center">"                                            >> ${WORKINGDIR}/${HOST}/main.html
     echo "<caption><em><h4>Captured interesting files from host</h4></em></caption>"    >> ${WORKINGDIR}/${HOST}/main.html
-    for FILES in $(ls ${WORKINGDIR}/${HOST}/files ); do
-      echo "<tr>"                                                                       >> ${WORKINGDIR}/${HOST}/main.html
-      echo "<td>"                                                                       >> ${WORKINGDIR}/${HOST}/main.html
-      echo "<a href="${WORKINGDIR}/${HOST}/files/${FILES}">${FILES}</a>"                >> ${WORKINGDIR}/${HOST}/main.html 
-      echo "</td>"                                                                      >> ${WORKINGDIR}/${HOST}/main.html
-      echo "</tr>"                                                                      >> ${WORKINGDIR}/${HOST}/main.html
-    done
-
+    if [ -d {WORKINGDIR}/${HOST}/files ]; then
+      for FILES in $(ls ${WORKINGDIR}/${HOST}/files ); do
+        echo "<tr>"                                                                       >> ${WORKINGDIR}/${HOST}/main.html
+        echo "<td>"                                                                       >> ${WORKINGDIR}/${HOST}/main.html
+        echo "<a href="${WORKINGDIR}/${HOST}/files/${FILES}">${FILES}</a>"                >> ${WORKINGDIR}/${HOST}/main.html 
+        echo "</td>"                                                                      >> ${WORKINGDIR}/${HOST}/main.html
+        echo "</tr>"                                                                      >> ${WORKINGDIR}/${HOST}/main.html
+      done
+    fi
 
     echo "<tr>"                                                                        >> ${WORKINGDIR}/index.html
     echo "<td>"                                                                        >> ${WORKINGDIR}/index.html
