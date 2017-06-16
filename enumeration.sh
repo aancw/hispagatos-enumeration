@@ -67,7 +67,7 @@ egrep -v "^#|Status: Up" ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.gnmap | cut -d
 
 echo "<center><h1>${TARGET}</h1></center>"  >> ${TARGETDIR}/index.html
 echo "<center>"                             >> ${TARGETDIR}/index.html
-txt2html ${TARGETNOTES}  >> ${TARGETDIR}/index.html --preformat_trigger_lines=0
+txt2tags -H -t html -i ${TARGETNOTES} -o -  >> ${TARGETDIR}/index.html
 echo "</center>"                            >> ${TARGETDIR}/index.html
 
 echo "Starting generic Vulnerability scan..."
@@ -83,7 +83,7 @@ if [[ $TCPOPEN == *"445"* ]] || [[ $TCPOPEN == *"139"* ]]; then
   echo "Starting enumeration of SMB enum4linux..."
   $ENUM4LINUX -a ${TARGET} >  ${TARGETDIR}/${TARGET}-ENUM4LINUX || true
 
-  txt2html ${TARGETDIR}/${TARGET}-ENUM4LINUX > ${TARGETDIR}/${TARGET}-ENUM4LINUX.html
+  txt2tags -H -t html -i ${TARGETDIR}/${TARGET}-ENUM4LINUX -o -  > ${TARGETDIR}/${TARGET}-ENUM4LINUX.html
 
   echo "Starting nmap smb scripts scan..."
   $NMAPP -Pn -p445,135,139 --script="smb-enum-domains,
@@ -145,14 +145,14 @@ if [[ $TCPOPEN == *"80"* ]] || [[ $TCPOPEN == *"443"* ]] || [[ $TCPOPEN == *"808
     for WEBPORT in ${HTTPPORTS[@]}; do
       dirb http://${TARGET}:$WEBPORT /usr/share/dirb/wordlists/vulns/apache.txt,/usr/share/dirb/wordlists/common.txt,/usr/share/dirb/wordlists/indexes.txt -o \
         ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT} || true
-      txt2html ${TARGETDIR}/${TARGET}-Dirb-$WEBPORT > ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT}.html
+      txt2tags -H -t html -i ${TARGETDIR}/${TARGET}-Dirb-$WEBPORT -o - > ${TARGETDIR}/${TARGET}-Dirb-${WEBPORT}.html
     done
 
   fi
 
   for WEBPORT in ${HTTPPORTS[@]}; do
     fimap -u http://${TARGET}:$WEBPORT/ > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT || true
-    txt2html ${TARGETDIR}/${TARGET}-fimap-$WEBPORT > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT.html
+    txt2tags -H -t html -i ${TARGETDIR}/${TARGET}-fimap-$WEBPORT -o - > ${TARGETDIR}/${TARGET}-fimap-$WEBPORT.html
   done
   
   echo "OPEN ZAPROXY and do enumeration of the WEBAPP's"
@@ -168,7 +168,7 @@ fi
 
 /usr/bin/searchsploit --nmap ${TARGETDIR}/${TARGET}-BASIC-Pn-allports.xml > ${TARGETDIR}/${TARGET}-exploit-list
 
-txt2html ${TARGETDIR}/${TARGET}-exploit-list > ${TARGETDIR}/${TARGET}-exploit-list.html
+txt2tags -H -t html -i ${TARGETDIR}/${TARGET}-exploit-list -o - > ${TARGETDIR}/${TARGET}-exploit-list.html
 
 
 
