@@ -25,11 +25,11 @@ if [ ! -f ${TARGETNOTES} ]; then
     touch ${TARGETNOTES} 
 fi
 
-if [ ! -f ${FILES} ]; then
+if [ ! -d ${FILES} ]; then
     mkdir ${FILES}
 fi
 
-if [ ! -f ${DOCS} ]; then
+if [ ! -d ${DOCS} ]; then
     mkdir ${DOCS}
 fi
 
