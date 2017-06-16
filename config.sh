@@ -11,6 +11,8 @@ ENUM4LINUX="/usr/bin/enum4linux"
 NIKTO="/usr/bin/nikto"
 TARGETDIR="${WORKINGDIR}/${TARGET}"
 TARGETNOTES="${TARGETDIR}/${TARGET}-NOTES"
+FILES="${WORKINGDIR}/${TARGET}/files"
+DOCS="${WORKINGDIR}/${TARGET}/docs"
 DELETE="true"
 DISABLE_DIRBUSTER="false"
 #####################################

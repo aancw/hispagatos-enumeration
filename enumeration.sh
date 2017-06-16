@@ -13,20 +13,27 @@ if [ $# -eq 0 ] ||  [ -z "$1" ];
     exit 1
 fi
 
-if [ ! -d  ${WORKINGDIR} ];
-  then
+if [ ! -d  ${WORKINGDIR} ]; then
     mkdir ${WORKINGDIR} 
 fi
 
-if [ ! -d  ${TARGETDIR} ];
-  then
+if [ ! -d  ${TARGETDIR} ]; then
     mkdir ${TARGETDIR}
 fi
 
-if [ ! -f ${TARGETNOTES} ];
-  then
+if [ ! -f ${TARGETNOTES} ]; then
     touch ${TARGETNOTES} 
 fi
+
+if [ ! -f ${FILES} ]; then
+    mkdir ${FILES}
+fi
+
+if [ ! -f ${DOCS} ]; then
+    mkdir ${DOCS}
+fi
+
+
 
 if [ $DELETE == "true" ];
  then
